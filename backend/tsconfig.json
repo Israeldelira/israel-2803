@@ -8,6 +8,8 @@
     "outDir": "./dist",
 
     "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
