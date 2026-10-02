@@ -6,8 +6,8 @@ import type { RequestHandler } from 'express';
 export function validationMiddleware<T extends object>(type: new () => T): RequestHandler {
   return async (req, res, next) => {
     try {
-      const source = req.method === 'GET' ? req.query : req.body;
-      const dto = plainToInstance(type, source ?? {});
+      const fromQuery = req.method === 'GET';
+      const dto = plainToInstance(type, (fromQuery ? req.query : req.body) ?? {});
       const errors = await validate(dto, {
         whitelist: false,
         forbidUnknownValues: false,
@@ -24,6 +24,10 @@ export function validationMiddleware<T extends object>(type: new () => T): Reque
           })),
         });
         return;
+      }
+
+      if (!fromQuery) {
+        req.body = dto;
       }
 
       next();
